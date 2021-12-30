@@ -9,3 +9,7 @@
 
 # rspec failure tracking
 .rspec_status
+
+# this is a gem, don't track the specific deps or build artifact
+Gemfile.lock
+rspec-activerecord-expectations-*.gem

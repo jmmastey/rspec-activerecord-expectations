@@ -5,7 +5,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["hello@joemastey.com"]
 
   spec.summary       = %q{A gem to test how many activerecord queries your code executes.}
-  spec.description   = %q{A gem to test how many activerecord queries your code executes.}
+  spec.description   = %q{Adds new matchers to rspec to help you test whether your code is executing an unreasonable number of queries.}
   spec.homepage      = "https://github.com/jmmastey/rspec-activerecord-expectations"
   spec.license       = "MIT"
   spec.required_ruby_version = Gem::Requirement.new(">= 2.3.0")
@@ -22,8 +22,8 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "activerecord", ">= 6.0" # TODO loosen me?
-  spec.add_dependency "sqlite3"
+  spec.add_dependency "activerecord", ">= 5.0", "< 7.0" # TODO run tests to loosen me
+  spec.add_dependency "sqlite3", "~> 1.0"
 
-  spec.add_development_dependency "pry", "> 0"
+  spec.add_development_dependency "pry", "~> 0.0"
 end
