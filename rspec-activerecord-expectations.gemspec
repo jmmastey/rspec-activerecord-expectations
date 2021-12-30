@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          = "rspec-activerecord-expectations"
-  spec.version       = '1.0.1'
+  spec.version       = '1.1.0'
   spec.authors       = ["Joseph Mastey"]
   spec.email         = ["hello@joemastey.com"]
 

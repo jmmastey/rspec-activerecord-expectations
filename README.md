@@ -104,15 +104,14 @@ This gem still has lots of future functionality. See below.
 
 ```ruby
 expect {}.to execute.more_than(20).activerecord_queries
-expect {}.to execute.fewer_than(20).insert_queries
 expect {}.to execute.exactly(5).queries
-expect {}.to execute.at_least(5).handrolled_queries
 
+expect {}.to execute.less_than(20).activerecord_queries
+expect {}.to execute.less_than(20).insert_queries
 expect {}.to execute.less_than(20).delete_queries
 expect {}.to execute.less_than(20).load_queries
 expect {}.to execute.less_than(20).schema_queries
 expect {}.to execute.less_than(20).exists_queries
-expect {}.to execute.less_than(20).queries
 expect {}.to execute.less_than(20).queries_of_type("Audited::Audit Load")
 
 expect {}.not_to rollback_transaction.exactly(5).times
@@ -126,8 +125,9 @@ expect {}.to delete.exactly(2).of_any_type
 
 expect {}.not_to repeatedly_load(Audited::Audit)
 
-at_least, more_than, at_most, less_than, lteq?
+at_least, more_than, lteq?
 exactly(1) => once?
+detect handrolled queries?
 ```
 
 - ignore transactionals (begin / rollback)

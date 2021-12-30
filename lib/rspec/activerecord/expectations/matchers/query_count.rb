@@ -26,12 +26,19 @@ module RSpec::ActiveRecord::Expectations
 
       # COMPARISON TYPES
 
-      def fewer_than(n)
+      def less_than(n)
         @comparison   = n
-        @match_method = method(:match_fewer_than)
+        @match_method = method(:compare_less_than)
         self
       end
-      alias_method :less_than, :fewer_than
+      alias_method :fewer_than, :less_than
+
+      def less_than_or_equal_to(n)
+        @comparison   = n
+        @match_method = method(:compare_less_than_equal_to)
+        self
+      end
+      alias_method :at_most, :less_than_or_equal_to
 
       # TARGET QUERY TYPES
 
@@ -44,13 +51,23 @@ module RSpec::ActiveRecord::Expectations
 
       # MATCHERS
 
-      def match_fewer_than
+      def compare_less_than
         count = @collector.queries_of_type(@query_type)
 
         @failure_message = "expected block to execute fewer than #{@comparison} queries, but it executed #{count}"
         @failure_message_when_negated = "expected block not to execute fewer than #{@comparison} queries, but it executed #{count}"
 
         count < @comparison
+      end
+
+      def compare_less_than_equal_to
+        count = @collector.queries_of_type(@query_type)
+
+        # boy this negated operator is confusing. don't use that plz.
+        @failure_message = "expected block to execute at most #{@comparison} queries, but it executed #{count}"
+        @failure_message_when_negated = "expected block not to execute any less than #{@comparison} queries, but it executed #{count}"
+
+        count <= @comparison
       end
     end
   end
