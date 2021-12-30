@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.description   = %q{Adds new matchers to rspec to help you test whether your code is executing an unreasonable number of queries.}
   spec.homepage      = "https://github.com/jmmastey/rspec-activerecord-expectations"
   spec.license       = "MIT"
-  spec.required_ruby_version = Gem::Requirement.new(">= 2.3.0")
+  spec.required_ruby_version = Gem::Requirement.new(">= 1.8.0")
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = spec.homepage
