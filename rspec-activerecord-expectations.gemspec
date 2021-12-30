@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          = "rspec-activerecord-expectations"
-  spec.version       = '1.0.0'
+  spec.version       = '1.0.1'
   spec.authors       = ["Joseph Mastey"]
   spec.email         = ["hello@joemastey.com"]
 
@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "activerecord", ">= 5.0", "< 7.1"
+  spec.add_dependency "activerecord", ">= 5.0.0", "< 7.1.0"
   spec.add_dependency "sqlite3", "~> 1.0"
 
   spec.add_development_dependency "pry", "~> 0.0"
