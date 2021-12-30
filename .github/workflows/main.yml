@@ -11,17 +11,28 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
-        ruby-version: [3.0, 2.7, 2.6, 2.5, 2.4, 2.3]
+        ruby-version: ['3.0', '2.7', '2.6', '2.5', '2.4', '2.3']
+        rails: ['5.0', '5.1', '5.2', '6.0', '6.1']
+
     runs-on: ${{ matrix.os }}
+    name: Test Ruby ${{ matrix.ruby }}, Rails ${{ matrix.rails }}, OS ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v2
+
       - name: Set up Ruby ${{ matrix.ruby-version }}
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby-version }}
           bundler-cache: true
-      - name: Install dependencies
-        run: bundle install
+
+      - name: Install correct gems / rails version
+        env:
+          MATRIX_RAILS_VERSION: ${{ matrix.rails }}
+        run: |
+          export BUNDLE_GEMFILE="${GITHUB_WORKSPACE}/gemfiles/rails_${MATRIX_RAILS_VERSION}.gemfile"
+          gem install bundler
+          bundle install --jobs 4 --retry 3
+
       - name: Run tests
         run: bundle exec rspec

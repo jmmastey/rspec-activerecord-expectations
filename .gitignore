@@ -12,4 +12,5 @@
 
 # this is a gem, don't track the specific deps or build artifact
 Gemfile.lock
+rails_*.gemfile.lock
 rspec-activerecord-expectations-*.gem

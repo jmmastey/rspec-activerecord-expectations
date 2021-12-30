@@ -26,4 +26,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "sqlite3", "~> 1.0"
 
   spec.add_development_dependency "pry", "~> 0.0"
+  spec.add_development_dependency "appraisal", "~> 2"
 end
