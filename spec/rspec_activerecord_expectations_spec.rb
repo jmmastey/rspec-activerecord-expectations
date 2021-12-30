@@ -76,4 +76,64 @@ RSpec.describe RSpec::ActiveRecord::Expectations do
       }.to execute.fewer_than(3).queries
     end
   end
+
+  describe "#greater_than" do
+    it "passes if you run lots of queries" do
+      expect {
+        4.times { album.reload }
+      }.to execute.greater_than(3).queries
+    end
+
+    it "errors if you don't run enough" do
+      expect_failure
+
+      expect {
+        2.times { album.reload }
+      }.to execute.greater_than(3).queries
+    end
+
+    it "allows negation" do
+      expect {
+        2.times { album.reload }
+      }.not_to execute.greater_than(3).queries
+    end
+
+    it "is aliased to more_than" do
+      expect {
+        4.times { album.reload }
+      }.to execute.more_than(3).queries
+    end
+  end
+
+  describe "#greater_than_or_equal_to" do
+    it "passes if you run lots of queries" do
+      expect {
+        4.times { album.reload }
+      }.to execute.greater_than_or_equal_to(3).queries
+
+      expect {
+        3.times { album.reload }
+      }.to execute.greater_than_or_equal_to(3).queries
+    end
+
+    it "errors if you run don't run enough queries" do
+      expect_failure
+
+      expect {
+        2.times { album.reload }
+      }.to execute.greater_than(3).queries
+    end
+
+    it "allows negation" do
+      expect {
+        2.times { album.reload }
+      }.not_to execute.greater_than(3).queries
+    end
+
+    it "is aliased to at_least" do
+      expect {
+        4.times { album.reload }
+      }.to execute.at_least(3).queries
+    end
+  end
 end

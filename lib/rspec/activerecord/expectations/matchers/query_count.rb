@@ -35,10 +35,24 @@ module RSpec::ActiveRecord::Expectations
 
       def less_than_or_equal_to(n)
         @comparison   = n
-        @match_method = method(:compare_less_than_equal_to)
+        @match_method = method(:compare_less_than_or_equal_to)
         self
       end
       alias_method :at_most, :less_than_or_equal_to
+
+      def greater_than(n)
+        @comparison   = n
+        @match_method = method(:compare_greater_than)
+        self
+      end
+      alias_method :more_than, :greater_than
+
+      def greater_than_or_equal_to(n)
+        @comparison   = n
+        @match_method = method(:compare_greater_than_or_equal_to)
+        self
+      end
+      alias_method :at_least, :greater_than_or_equal_to
 
       # TARGET QUERY TYPES
 
@@ -60,7 +74,7 @@ module RSpec::ActiveRecord::Expectations
         count < @comparison
       end
 
-      def compare_less_than_equal_to
+      def compare_less_than_or_equal_to
         count = @collector.queries_of_type(@query_type)
 
         # boy this negated operator is confusing. don't use that plz.
@@ -68,6 +82,25 @@ module RSpec::ActiveRecord::Expectations
         @failure_message_when_negated = "expected block not to execute any less than #{@comparison} queries, but it executed #{count}"
 
         count <= @comparison
+      end
+
+      def compare_greater_than
+        count = @collector.queries_of_type(@query_type)
+
+        @failure_message = "expected block to execute greater than #{@comparison} queries, but it executed #{count}"
+        @failure_message_when_negated = "expected block not to execute greater than #{@comparison} queries, but it executed #{count}"
+
+        count > @comparison
+      end
+
+      def compare_greater_than_or_equal_to
+        count = @collector.queries_of_type(@query_type)
+
+        # see above, negating this matcher is so confusing.
+        @failure_message = "expected block to execute at least #{@comparison} queries, but it executed #{count}"
+        @failure_message_when_negated = "expected block not to execute any more than #{@comparison} queries, but it executed #{count}"
+
+        count >= @comparison
       end
     end
   end

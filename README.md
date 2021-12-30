@@ -93,9 +93,20 @@ performance regression.
 
 ## Supported Matchers
 
+Listed along with their aliases.
+
 ```ruby
+expect {}.to execute.less_than(20).queries
 expect {}.to execute.fewer_than(20).queries
-expect {}.to execute.less_than(20).queries    # alias for fewer_than
+
+expect {}.to execute.less_than_or_equal_to(20).queries
+expect {}.to execute.at_most(20).queries
+
+expect {}.to execute.greater_than(20).queries
+expect {}.to execute.more_than(20).queries
+
+expect {}.to execute.greater_than_or_equal_to(20).queries
+expect {}.to execute.at_least(20).queries
 ```
 
 ## Future Planned Functionality
@@ -103,16 +114,16 @@ expect {}.to execute.less_than(20).queries    # alias for fewer_than
 This gem still has lots of future functionality. See below.
 
 ```ruby
-expect {}.to execute.more_than(20).activerecord_queries
 expect {}.to execute.exactly(5).queries
 
-expect {}.to execute.less_than(20).activerecord_queries
-expect {}.to execute.less_than(20).insert_queries
-expect {}.to execute.less_than(20).delete_queries
-expect {}.to execute.less_than(20).load_queries
-expect {}.to execute.less_than(20).schema_queries
-expect {}.to execute.less_than(20).exists_queries
-expect {}.to execute.less_than(20).queries_of_type("Audited::Audit Load")
+expect {}.to execute.at_least(2).activerecord_queries
+expect {}.to execute.at_least(2).insert_queries
+expect {}.to execute.at_least(2).delete_queries
+expect {}.to execute.at_least(2).load_queries
+expect {}.to execute.at_least(2).schema_queries
+expect {}.to execute.at_least(2).exists_queries
+expect {}.to execute.at_least(2).queries_of_type("Audited::Audit Load")
+expect {}.to execute.at_least(2).hand_rolled_queries
 
 expect {}.not_to rollback_transaction.exactly(5).times
 expect {}.not_to commit_transaction.once
@@ -125,9 +136,7 @@ expect {}.to delete.exactly(2).of_any_type
 
 expect {}.not_to repeatedly_load(Audited::Audit)
 
-at_least, more_than, lteq?
-exactly(1) => once?
-detect handrolled queries?
+expect {}.to execute.at_least(1).query
 ```
 
 - ignore transactionals (begin / rollback)
