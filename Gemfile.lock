@@ -1,12 +1,33 @@
 PATH
   remote: .
   specs:
-    rspec-activerecord-expectations (0.0.1)
+    rspec-activerecord-expectations (1.0.0)
+      activerecord (>= 6.0)
+      sqlite3
 
 GEM
   remote: https://rubygems.org/
   specs:
+    activemodel (7.0.0)
+      activesupport (= 7.0.0)
+    activerecord (7.0.0)
+      activemodel (= 7.0.0)
+      activesupport (= 7.0.0)
+    activesupport (7.0.0)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      i18n (>= 1.6, < 2)
+      minitest (>= 5.1)
+      tzinfo (~> 2.0)
+    coderay (1.1.3)
+    concurrent-ruby (1.1.9)
     diff-lcs (1.5.0)
+    i18n (1.8.11)
+      concurrent-ruby (~> 1.0)
+    method_source (1.0.0)
+    minitest (5.15.0)
+    pry (0.14.1)
+      coderay (~> 1.1)
+      method_source (~> 1.0)
     rake (12.3.3)
     rspec (3.10.0)
       rspec-core (~> 3.10.0)
@@ -21,11 +42,15 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.10.0)
     rspec-support (3.10.3)
+    sqlite3 (1.4.2)
+    tzinfo (2.0.4)
+      concurrent-ruby (~> 1.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  pry (> 0)
   rake (~> 12.0)
   rspec (~> 3.0)
   rspec-activerecord-expectations!
