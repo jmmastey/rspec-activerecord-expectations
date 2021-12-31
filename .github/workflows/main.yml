@@ -40,12 +40,11 @@ jobs:
   test_legacy:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
         ruby_version: ['2.6', '2.5', '2.4', '2.3']
         rails: ['5.0', '5.1', '5.2']
 
-    runs-on: ${{ matrix.os }}
-    name: legacy ruby ${{ matrix.ruby_version }}, rails ${{ matrix.rails }}, ${{ matrix.os }}
+    runs-on: ubuntu-latest
+    name: legacy ruby ${{ matrix.ruby_version }}, rails ${{ matrix.rails }}
 
     steps:
       - uses: actions/checkout@v2
