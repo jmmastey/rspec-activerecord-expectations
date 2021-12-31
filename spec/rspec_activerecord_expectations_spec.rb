@@ -148,4 +148,34 @@ RSpec.describe RSpec::ActiveRecord::Expectations do
       }.to execute.at_least(3).queries
     end
   end
+
+  describe "#exactly" do
+    it "passes if you run the right number of queries" do
+      expect {
+        2.times { album.reload }
+      }.to execute.exactly(2).queries
+    end
+
+    it "errors if you execute too many queries" do
+      expect_failure
+
+      expect {
+        3.times { album.reload }
+      }.to execute.exactly(2).queries
+    end
+
+    it "errors if you execute not enough queries" do
+      expect_failure
+
+      expect {
+        1.times { album.reload }
+      }.to execute.exactly(2).queries
+    end
+
+    it "allows negation" do
+      expect {
+        3.times { album.reload }
+      }.not_to execute.exactly(2).queries
+    end
+  end
 end

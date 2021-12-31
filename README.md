@@ -107,6 +107,8 @@ expect {}.to execute.more_than(20).queries
 
 expect {}.to execute.greater_than_or_equal_to(20).queries
 expect {}.to execute.at_least(20).queries
+
+expect {}.to execute.exactly(20).queries
 ```
 
 You can use `query` instead of `queries` if it reads more nicely to you.
@@ -121,8 +123,6 @@ expect {}.to execute.at_least(1).query
 This gem still has lots of future functionality. See below.
 
 ```ruby
-expect {}.to execute.exactly(5).queries
-
 expect {}.to execute.at_least(2).activerecord_queries
 expect {}.to execute.at_least(2).insert_queries
 expect {}.to execute.at_least(2).delete_queries
@@ -149,6 +149,7 @@ expect {}.not_to repeatedly_load(Audited::Audit)
 - differentiate AR queries from generic ones? arbitrary execution somehow?
 - warn about warmup
 - make sure we don't smite any built in methods (or from other libs)
+- only expose very generic matchers like `update` as actual matchers (don't override global method names)
 
 ## Development
 

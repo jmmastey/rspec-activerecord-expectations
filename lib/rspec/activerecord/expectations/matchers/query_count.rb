@@ -54,6 +54,12 @@ module RSpec::ActiveRecord::Expectations
       end
       alias_method :at_least, :greater_than_or_equal_to
 
+      def exactly(n)
+        @comparison   = n
+        @match_method = method(:compare_exactly)
+        self
+      end
+
       # TARGET QUERY TYPES
 
       def queries
@@ -102,6 +108,15 @@ module RSpec::ActiveRecord::Expectations
         @failure_message_when_negated = "expected block not to execute any more than #{@comparison} queries, but it executed #{count}"
 
         count >= @comparison
+      end
+
+      def compare_exactly
+        count = @collector.queries_of_type(@query_type)
+
+        @failure_message = "expected block to execute at #{@comparison} queries, but it executed #{count}"
+        @failure_message_when_negated = "expected block not to execute #{@comparison} queries, but it executed #{count}"
+
+        count == @comparison
       end
     end
   end

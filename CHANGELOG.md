@@ -2,9 +2,10 @@
 
 ## [1.1.1] - 2020-12-31
 - Add `query` as a synonym for `queries`
+- Add query count matcher for `exactly`
 
 ## [1.1.0] - 2020-12-30
-- Add matchers for less_than_or_equal_to, greater_than
+- Add query count matchers for e.g. `less_than_or_equal_to`, `greater_than`
 
 ## [1.0.1] - 2020-12-30
 - Pin all the dependencies to a proper working subset
