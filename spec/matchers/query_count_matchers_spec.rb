@@ -24,4 +24,8 @@ RSpec.describe RSpec::ActiveRecord::Expectations::Matchers::QueryCountMatcher do
       expect(matcher.failure_message_when_negated).to eq("expected block not to execute any less than 3 queries, but it executed 0")
     end
   end
+
+  xdescribe "#greater_than"
+  xdescribe "#greater_than_or_equal_to"
+  xdescribe "#exactly"
 end

@@ -1,7 +1,9 @@
 # Changelog
 
-## [1.1.1] - 2020-12-31
+## [1.2.0] - 2020-12-31
 - Add `query` as a synonym for `queries`
+- Ignore schema and transaction queries in query count
+- Add beginning of recording specific query types
 - Add query count matcher for `exactly`
 
 ## [1.1.0] - 2020-12-30

@@ -62,10 +62,14 @@ module RSpec::ActiveRecord::Expectations
 
       # TARGET QUERY TYPES
 
-      def queries
-        @query_type = :queries
-        self
+      RSpec::ActiveRecord::Expectations::QueryInspector.valid_query_types.each do |type|
+        define_method type do
+          @query_type = type
+          self
+        end
       end
+
+      # TODO singularize everything
       alias_method :query, :queries
 
       private

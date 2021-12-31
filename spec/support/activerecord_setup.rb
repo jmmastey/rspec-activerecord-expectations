@@ -26,6 +26,11 @@ ActiveRecord::Schema.define do
     table.column :track_number, :integer
     table.column :title, :string
   end
+
+  drop_table :labels, if_exists: true
+  create_table :labels do |table|
+    table.column :name, :string, null: false
+  end
 end
 
 class Album < ActiveRecord::Base
@@ -34,4 +39,8 @@ end
 
 class Track < ActiveRecord::Base
   belongs_to :album
+end
+
+class Label < ActiveRecord::Base
+  validates :name, presence: true
 end

@@ -91,9 +91,12 @@ That's it! Refactor your report to be more efficient and then leave the test in
 place to make sure that future developers don't accidentally cause a
 performance regression.
 
-## Supported Matchers
+## Counting Queries
 
-Listed along with their aliases.
+### Types of Comparisons
+
+Several comparison types are available, along with some aliases to allow for
+easier to read tests.
 
 ```ruby
 expect {}.to execute.less_than(20).queries
@@ -109,13 +112,23 @@ expect {}.to execute.greater_than_or_equal_to(20).queries
 expect {}.to execute.at_least(20).queries
 
 expect {}.to execute.exactly(20).queries
+
+expect {}.to execute.at_least(2).queries
+expect {}.to execute.at_least(1).query # singular form also accepted
 ```
 
-You can use `query` instead of `queries` if it reads more nicely to you.
+### Specific Query Types
+
+You can of course make assertions for the total number of queries executed, but
+sometimes it's more valuable to assert particular _types_ of queries, such as
+inserts or find statements. Matchers are supported for this as well!
+
+**Note**: Transaction (for example, `ROLLBACK`) queries are not counted in any of these
+categories, nor are queries that load the DB schema.
 
 ```ruby
-expect {}.to execute.at_least(2).queries
-expect {}.to execute.at_least(1).query
+expect {}.to execute.exactly(20).queries
+expect {}.to execute.exactly(20).insert_queries
 ```
 
 ## Future Planned Functionality
@@ -124,7 +137,6 @@ This gem still has lots of future functionality. See below.
 
 ```ruby
 expect {}.to execute.at_least(2).activerecord_queries
-expect {}.to execute.at_least(2).insert_queries
 expect {}.to execute.at_least(2).delete_queries
 expect {}.to execute.at_least(2).load_queries
 expect {}.to execute.at_least(2).schema_queries
@@ -144,12 +156,9 @@ expect {}.to delete.exactly(2).of_any_type
 expect {}.not_to repeatedly_load(Audited::Audit)
 ```
 
-- ignore transactionals (begin / rollback)
-- `name: Foo Load`
 - differentiate AR queries from generic ones? arbitrary execution somehow?
 - warn about warmup
-- make sure we don't smite any built in methods (or from other libs)
-- only expose very generic matchers like `update` as actual matchers (don't override global method names)
+- warn if we smite any built in methods (or methods from other libs)
 
 ## Development
 
