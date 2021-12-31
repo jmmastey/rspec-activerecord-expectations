@@ -17,6 +17,18 @@ RSpec.describe RSpec::ActiveRecord::Expectations do
     end
   end
 
+  describe "query types" do
+    it "allows you to specify all queries (singular or plural)" do
+      expect {
+        2.times { album.reload }
+      }.to execute.at_least(2).queries
+
+      expect {
+        1.times { album.reload }
+      }.to execute.at_least(1).query
+    end
+  end
+
   describe "#less_than" do
     it "passes if you don't run many queries" do
       expect {

@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.1.1] - 2020-12-31
+- Add `query` as a synonym for `queries`
+
 ## [1.1.0] - 2020-12-30
 - Add matchers for less_than_or_equal_to, greater_than
 

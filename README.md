@@ -109,6 +109,13 @@ expect {}.to execute.greater_than_or_equal_to(20).queries
 expect {}.to execute.at_least(20).queries
 ```
 
+You can use `query` instead of `queries` if it reads more nicely to you.
+
+```ruby
+expect {}.to execute.at_least(2).queries
+expect {}.to execute.at_least(1).query
+```
+
 ## Future Planned Functionality
 
 This gem still has lots of future functionality. See below.
@@ -135,8 +142,6 @@ expect {}.to update.exactly(2).of_any_type
 expect {}.to delete.exactly(2).of_any_type
 
 expect {}.not_to repeatedly_load(Audited::Audit)
-
-expect {}.to execute.at_least(1).query
 ```
 
 - ignore transactionals (begin / rollback)

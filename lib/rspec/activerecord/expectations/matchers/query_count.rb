@@ -60,6 +60,7 @@ module RSpec::ActiveRecord::Expectations
         @query_type = :queries
         self
       end
+      alias_method :query, :queries
 
       private
 
