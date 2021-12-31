@@ -26,7 +26,7 @@ jobs:
           ruby_version: ${{ matrix.ruby_version }}
           bundler-cache: true
 
-      - name: Install correct gems / rails version
+      - name: Install Gems w/ Rails ${{ matrix.rails }}
         env:
           MATRIX_RAILS_VERSION: ${{ matrix.rails }}
         run: |
@@ -55,7 +55,7 @@ jobs:
           ruby_version: ${{ matrix.ruby_version }}
           bundler-cache: true
 
-      - name: Install correct gems / rails version
+      - name: Install Gems w/ Rails ${{ matrix.rails }}
         env:
           MATRIX_RAILS_VERSION: ${{ matrix.rails }}
         run: |
