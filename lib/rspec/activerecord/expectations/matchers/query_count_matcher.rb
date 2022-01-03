@@ -19,7 +19,7 @@ module RSpec::ActiveRecord::Expectations
         raise NoComparisonError unless @match_method
         raise NoQueryTypeError unless @collector.valid_type?(@query_type)
 
-        result    = block.call
+        result = block.call
 
         !!@match_method.call
       end

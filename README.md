@@ -91,6 +91,30 @@ That's it! Refactor your report to be more efficient and then leave the test in
 place to make sure that future developers don't accidentally cause a
 performance regression.
 
+## Preventing Repeated Load (N+1) Queries
+
+Reloading, whether by e.g. `Album.find` or `album.tracks` are both antipatterns
+within your code. They will load from the database for every iteration in a
+loop, unless you load records outside the loop, cache responses, or use an
+eager loading mechanism like `includes`. These sorts of queries are often
+referred to as N+1 queries.
+
+This sort of query can be prevented using the `repeatedly_load` expectation.
+
+```ruby
+expect {}.not_to repeatedly_load('SomeActiveRecordClass')
+```
+
+This matcher will track ActiveRecord's built in load methods to prevent those
+N+1 situations. Using eager loading (e.g. `Track.all.includes(:album)`) will
+allow these expectations to pass as expected!
+
+**Note:** At the moment, this expectation will fail if you use a mechanism
+that loads records in batches, such as with `find_in_batches`. This will cause
+records to be "repeatedly loaded", but this is actually expected behavior in
+this case. If your tests load a relatively small number of records (which is
+probable), your tests won't fail. But it is possible.
+
 ## Counting Queries
 
 ### Types of Comparisons
@@ -136,12 +160,13 @@ expect {}.to execute.exactly(20).insert_queries
 This gem still has lots of future functionality. See below.
 
 ```ruby
-expect {}.to execute.at_least(2).activerecord_queries
 expect {}.to execute.at_least(2).delete_queries
 expect {}.to execute.at_least(2).load_queries
 expect {}.to execute.at_least(2).schema_queries
 expect {}.to execute.at_least(2).exists_queries
 expect {}.to execute.at_least(2).queries_of_type("Audited::Audit Load")
+
+expect {}.to execute.at_least(2).activerecord_queries
 expect {}.to execute.at_least(2).hand_rolled_queries
 
 expect {}.not_to rollback_transaction.exactly(5).times
@@ -152,13 +177,10 @@ expect {}.to create.exactly(5).of_type(User)
 expect {}.to insert.exactly(5).subscription_changes
 expect {}.to update.exactly(2).of_any_type
 expect {}.to delete.exactly(2).of_any_type
-
-expect {}.not_to repeatedly_load(Audited::Audit)
 ```
 
-- differentiate AR queries from generic ones? arbitrary execution somehow?
-- warn about warmup
 - warn if we smite any built in methods (or methods from other libs)
+- support Rails 6 bulk insert (still one query)
 
 ## Development
 

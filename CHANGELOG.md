@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.3.0] - 2020-12-31
+- Add `repeatedly_load` matcher.
+
 ## [1.2.0] - 2020-12-31
 - Add `query` as a synonym for `queries`
 - Ignore schema and transaction queries in query count

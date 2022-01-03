@@ -31,6 +31,11 @@ ActiveRecord::Schema.define do
   create_table :labels do |table|
     table.column :name, :string, null: false
   end
+
+  drop_table :genres, if_exists: true
+  create_table :genres do |table|
+    table.column :name, :string
+  end
 end
 
 class Album < ActiveRecord::Base
@@ -43,4 +48,10 @@ end
 
 class Label < ActiveRecord::Base
   validates :name, presence: true
+end
+
+module Categories
+  class Genre < ActiveRecord::Base
+    self.table_name = :genres
+  end
 end
