@@ -1,7 +1,10 @@
 # Changelog
 
 ## [1.3.0] - 2020-12-31
-- Add `repeatedly_load` matcher.
+- Add `repeatedly_load` matcher
+- Add query type matchers for `load_queries`, `schema_queries`, `transaction_queries`, `destroy_queries`
+- Allow singular version of all query types (e.g. `transaction_queries` vs `transaction_query`)
+- Fix failure message for `execute.exactly` matcher
 
 ## [1.2.0] - 2020-12-31
 - Add `query` as a synonym for `queries`

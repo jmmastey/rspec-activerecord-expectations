@@ -52,11 +52,18 @@ RSpec.describe RSpec::ActiveRecord::Expectations::Collector do
   xdescribe "#load_queries" # find_queries? does this include reload?
   xdescribe "#exists_queries"
 
-  xdescribe "#schema_queries"
-  xdescribe "#transaction_queries"
+  describe "#schema_queries" do
+    it "tracks schema loading at the beginning of a test run, though that's not very useful" do
+      expect {
+        Label.reset_column_information
+        Label.create
+      }.to change {
+        collector.queries_of_type(:schema_queries)
+      }
+    end
+  end
 
   xdescribe "#queries_of_type"
-
   xdescribe "#hand_rolled_queries"
   xdescribe "#activerecord_queries"
 end

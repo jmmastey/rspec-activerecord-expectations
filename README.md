@@ -147,12 +147,22 @@ You can of course make assertions for the total number of queries executed, but
 sometimes it's more valuable to assert particular _types_ of queries, such as
 inserts or find statements. Matchers are supported for this as well!
 
-**Note**: Transaction (for example, `ROLLBACK`) queries are not counted in any of these
+**Note:** Transaction (for example, `ROLLBACK`) queries are not counted in any of these
 categories, nor are queries that load the DB schema.
+
+**Note:** Destroy and delete queries are both condensed into the matcher for
+`destroy_queries`.
 
 ```ruby
 expect {}.to execute.exactly(20).queries
+
 expect {}.to execute.exactly(20).insert_queries
+expect {}.to execute.exactly(20).load_queries
+expect {}.to execute.exactly(20).destroy_queries
+expect {}.to execute.exactly(20).exists_queries
+
+expect {}.to execute.exactly(20).schema_queries
+expect {}.to execute.exactly(20).transaction_queries
 ```
 
 ## Future Planned Functionality
@@ -160,11 +170,8 @@ expect {}.to execute.exactly(20).insert_queries
 This gem still has lots of future functionality. See below.
 
 ```ruby
-expect {}.to execute.at_least(2).delete_queries
-expect {}.to execute.at_least(2).load_queries
-expect {}.to execute.at_least(2).schema_queries
-expect {}.to execute.at_least(2).exists_queries
 expect {}.to execute.at_least(2).queries_of_type("Audited::Audit Load")
+expect {}.to execute.at_least(2).load_queries("Audited::Audit")
 
 expect {}.to execute.at_least(2).activerecord_queries
 expect {}.to execute.at_least(2).hand_rolled_queries

@@ -21,11 +21,39 @@ RSpec.describe RSpec::ActiveRecord::Expectations do
     it "allows you to specify all queries (singular or plural)" do
       expect {
         2.times { album.reload }
-      }.to execute.at_least(2).queries
+      }.to execute.exactly(2).queries
 
       expect {
         1.times { album.reload }
-      }.to execute.at_least(1).query
+      }.to execute.exactly(1).query
+    end
+
+    it "can handle both with-callbacks and without-callbacks destroy queries" do
+      num_albums = Album.count
+
+      expect {
+        Album.destroy_all
+      }.to execute.exactly(num_albums).destroy_queries
+
+      expect {
+        Album.delete_all
+      }.to execute.exactly(1).destroy_query
+    end
+
+    it "can handle exists? queries" do
+      expect {
+        Album.where(id: -1).exists?
+      }.to execute.exactly(1).exists_query
+    end
+
+    xit "can handle queries by their specific names" do
+      expect {
+        Album.where(id: -1).exists?
+      }.to execute.exactly(1).query_of_type("Album Load")
+
+      expect {
+        Album.where(id: -1).exists?
+      }.to execute.exactly(1).load_query(Album)
     end
   end
 

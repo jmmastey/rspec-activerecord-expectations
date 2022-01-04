@@ -19,9 +19,11 @@ module RSpec::ActiveRecord::Expectations
         raise NoComparisonError unless @match_method
         raise NoQueryTypeError unless @collector.valid_type?(@query_type)
 
-        result = block.call
+        block.call
+        result = @match_method.call
+        @collector.finalize
 
-        !!@match_method.call
+        result
       end
 
       # COMPARISON TYPES
@@ -67,6 +69,14 @@ module RSpec::ActiveRecord::Expectations
           @query_type = type
           self
         end
+
+        singularized_type = type.to_s.gsub('queries', 'query')
+        if singularized_type != type.to_s
+          define_method singularized_type do
+            @query_type = type
+            self
+          end
+        end
       end
 
       # TODO singularize everything
@@ -74,13 +84,17 @@ module RSpec::ActiveRecord::Expectations
 
       private
 
+      def humanized_query_type
+        @query_type.to_s.gsub("_", " ")
+      end
+
       # MATCHERS
 
       def compare_less_than
         count = @collector.queries_of_type(@query_type)
 
-        @failure_message = "expected block to execute fewer than #{@comparison} queries, but it executed #{count}"
-        @failure_message_when_negated = "expected block not to execute fewer than #{@comparison} queries, but it executed #{count}"
+        @failure_message = "expected block to execute fewer than #{@comparison} #{humanized_query_type}, but it executed #{count}"
+        @failure_message_when_negated = "expected block not to execute fewer than #{@comparison} #{humanized_query_type}, but it executed #{count}"
 
         count < @comparison
       end
@@ -89,8 +103,8 @@ module RSpec::ActiveRecord::Expectations
         count = @collector.queries_of_type(@query_type)
 
         # boy this negated operator is confusing. don't use that plz.
-        @failure_message = "expected block to execute at most #{@comparison} queries, but it executed #{count}"
-        @failure_message_when_negated = "expected block not to execute any less than #{@comparison} queries, but it executed #{count}"
+        @failure_message = "expected block to execute at most #{@comparison} #{humanized_query_type}, but it executed #{count}"
+        @failure_message_when_negated = "expected block not to execute any less than #{@comparison} #{humanized_query_type}, but it executed #{count}"
 
         count <= @comparison
       end
@@ -98,8 +112,8 @@ module RSpec::ActiveRecord::Expectations
       def compare_greater_than
         count = @collector.queries_of_type(@query_type)
 
-        @failure_message = "expected block to execute greater than #{@comparison} queries, but it executed #{count}"
-        @failure_message_when_negated = "expected block not to execute greater than #{@comparison} queries, but it executed #{count}"
+        @failure_message = "expected block to execute greater than #{@comparison} #{humanized_query_type}, but it executed #{count}"
+        @failure_message_when_negated = "expected block not to execute greater than #{@comparison} #{humanized_query_type}, but it executed #{count}"
 
         count > @comparison
       end
@@ -108,8 +122,8 @@ module RSpec::ActiveRecord::Expectations
         count = @collector.queries_of_type(@query_type)
 
         # see above, negating this matcher is so confusing.
-        @failure_message = "expected block to execute at least #{@comparison} queries, but it executed #{count}"
-        @failure_message_when_negated = "expected block not to execute any more than #{@comparison} queries, but it executed #{count}"
+        @failure_message = "expected block to execute at least #{@comparison} #{humanized_query_type}, but it executed #{count}"
+        @failure_message_when_negated = "expected block not to execute any more than #{@comparison} #{humanized_query_type}, but it executed #{count}"
 
         count >= @comparison
       end
@@ -117,8 +131,8 @@ module RSpec::ActiveRecord::Expectations
       def compare_exactly
         count = @collector.queries_of_type(@query_type)
 
-        @failure_message = "expected block to execute at #{@comparison} queries, but it executed #{count}"
-        @failure_message_when_negated = "expected block not to execute #{@comparison} queries, but it executed #{count}"
+        @failure_message = "expected block to execute exactly #{@comparison} #{humanized_query_type}, but it executed #{count}"
+        @failure_message_when_negated = "expected block not to execute exactly #{@comparison} #{humanized_query_type}, but it executed #{count}"
 
         count == @comparison
       end

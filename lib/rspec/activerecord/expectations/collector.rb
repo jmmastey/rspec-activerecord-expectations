@@ -7,7 +7,11 @@ module RSpec::ActiveRecord::Expectations
         hash[query_type] = 0
       end
 
-      ActiveSupport::Notifications.subscribe("sql.active_record", method(:record_query))
+      @subscription = ActiveSupport::Notifications.subscribe("sql.active_record", method(:record_query))
+    end
+
+    def finalize
+      ActiveSupport::Notifications.unsubscribe(@subscription)
     end
 
     def queries_of_type(type)
@@ -27,6 +31,8 @@ module RSpec::ActiveRecord::Expectations
 
       categories.each do |category|
         @counts[category] += 1
+      rescue NoMethodError
+        raise "tried to add to to #{category} but it doesn't exist"
       end
 
       @by_name[data[:name]] ||= 0
