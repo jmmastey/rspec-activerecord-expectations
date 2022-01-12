@@ -7,11 +7,11 @@ on:
     branches: [ main ]
 
 jobs:
-  test_modern: &test_base
+  test_modern:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
-        ruby-version: ['3.1', '3.0', '2.7', 'truffleruby'] # no CI against jruby because of sqlite3
+        ruby-version: ['3.1', '3.0', '2.7']
         rails: ['5.0', '5.1', '5.2', '6.0', '6.1', '7.0']
 
     runs-on: ${{ matrix.os }}
@@ -38,19 +38,60 @@ jobs:
         run: bundle exec rspec
 
   test_legacy:
-    <<: *test_base
     strategy:
       matrix:
         ruby-version: ['2.6', '2.5']
         rails: ['5.0', '5.1', '5.2']
 
-    name: legacy ruby ${{ matrix.ruby-version }}, rails ${{ matrix.rails }}
+    runs-on: ${{ matrix.os }}
+    name: ruby ${{ matrix.ruby-version }}, rails ${{ matrix.rails }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Ruby ${{ matrix.ruby-version }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+          bundler-cache: true
+
+      - name: Install Gems w/ Rails ${{ matrix.rails }}
+        env:
+          MATRIX_RAILS_VERSION: ${{ matrix.rails }}
+        run: |
+          export BUNDLE_GEMFILE="${GITHUB_WORKSPACE}/gemfiles/rails_${MATRIX_RAILS_VERSION}.gemfile"
+          gem install bundler
+          bundle install --jobs 4 --retry 3
+
+      - name: Run tests
+        run: bundle exec rspec
 
   test_alt_rubies:
-    <<: *test_base
     strategy:
       matrix:
         ruby-version: ['jruby', 'truffleruby']
         rails: ['6.0', '6.1', '7.0']
 
-    name: alt ruby ${{ matrix.ruby-version }}, rails ${{ matrix.rails }}
+    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.ruby-version }}, rails ${{ matrix.rails }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Ruby ${{ matrix.ruby-version }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+          bundler-cache: true
+
+      - name: Install Gems w/ Rails ${{ matrix.rails }}
+        env:
+          MATRIX_RAILS_VERSION: ${{ matrix.rails }}
+        run: |
+          export BUNDLE_GEMFILE="${GITHUB_WORKSPACE}/gemfiles/rails_${MATRIX_RAILS_VERSION}.gemfile"
+          gem install bundler
+          bundle install --jobs 4 --retry 3
+
+      - name: Run tests
+        run: bundle exec rspec
+ 
