@@ -70,7 +70,7 @@ jobs:
     strategy:
       matrix:
         ruby-version: ['jruby', 'truffleruby']
-        rails: ['6.0', '6.1', '7.0']
+        rails: ['6.0', '6.1'] # jruby / jdbc-sqlite3 end up tightly bound to rails 6.x
 
     runs-on: ubuntu-latest
     name: ${{ matrix.ruby-version }}, rails ${{ matrix.rails }}
