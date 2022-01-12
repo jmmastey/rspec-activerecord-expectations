@@ -30,7 +30,8 @@ group 'test' do
 end
 ```
 
-Then, include the functionality within your spec helper (or in a support file).
+Then, include the functionality within your `rails_helper.rb` (or in a support
+file).
 
 ```ruby
 RSpec.configure do |config|

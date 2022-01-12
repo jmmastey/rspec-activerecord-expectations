@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.0.1] - 2022-01-12
+- change CI matrix for more version compatibility
+- README changes
+
 ## [2.0.0] - 2022-01-07
 - Require much more recent ruby, to use syntax that's been around since 2017
 
