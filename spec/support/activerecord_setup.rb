@@ -9,6 +9,7 @@ end
 ActiveRecord::Base.establish_connection(
   adapter: "sqlite3",
   database: "tmp/test-db.sqlite",
+  timeout: 5000,
 )
 
 ActiveRecord::Schema.define do
