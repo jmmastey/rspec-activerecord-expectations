@@ -1,8 +1,12 @@
 # Changelog
 
+## [2.1.1] - 2022-01-12
+- Gemspec is really generated using the version of ruby that's locally in use.
+  Update that build artifact to use non-java dependencies.
+
 ## [2.1.0] - 2022-01-12
-- change CI matrix for more version compatibility
-- update gemspec to move some deps into development only
+- Change CI matrix for more version compatibility
+- Update gemspec to move some deps into development only
 - README changes
 
 ## [2.0.0] - 2022-01-07
