@@ -119,7 +119,7 @@ queries, which may look like repeated loading.
 If your test has a small enough number of records that only one batch is
 loaded, your tests may work just fine. But otherwise, you may want to allow
 your code to specify a batch size in order to guarantee only a single batch
-is loaded:
+is loaded.
 
 ```ruby
 tracks = Track.all
@@ -131,10 +131,13 @@ expect {
 
 ## Counting Queries
 
-### Types of Comparisons
+Some services won't necessarily have N+1 issues with records loading, but might
+still have problems with executing too many queries. In this case, the
+`repeatedly_load` matcher might be insufficient.
 
-Several comparison types are available, along with some aliases to allow for
-easier to read tests.
+In this case, consider creating an expectation on the total number of queries
+executed by your code. Several comparison types are available, along with some
+aliases to allow for easier to read tests.
 
 ```ruby
 expect {}.to execute.less_than(20).queries
@@ -157,15 +160,10 @@ expect {}.to execute.at_least(1).query # singular form also accepted
 
 ### Specific Query Types
 
-You can of course make assertions for the total number of queries executed, but
-sometimes it's more valuable to assert particular _types_ of queries, such as
-inserts or find statements. Matchers are supported for this as well!
-
-**Note:** Transaction (for example, `ROLLBACK`) queries are not counted in any of these
-categories, nor are queries that load the DB schema.
-
-**Note:** Destroy and delete queries are both condensed into the matcher for
-`destroy_queries`.
+You can make assertions for the total number of queries executed, but sometimes
+it's more valuable to assert that a particular _type_ of query was executed.
+For example, a particular number of queries to destroy records. There are
+matchers available for that purpose as well!
 
 ```ruby
 expect {}.to execute.exactly(20).queries
@@ -178,6 +176,12 @@ expect {}.to execute.exactly(20).exists_queries
 expect {}.to execute.exactly(20).schema_queries
 expect {}.to execute.exactly(20).transaction_queries
 ```
+
+**Note:** Transaction (for example, `ROLLBACK`) queries are not counted in any of these
+categories, nor are queries that load the DB schema.
+
+**Note:** Destroy and delete queries are both condensed into the matcher for
+`destroy_queries`.
 
 ## Future Planned Functionality
 
