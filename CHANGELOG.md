@@ -1,7 +1,8 @@
 # Changelog
 
-## [2.0.1] - 2022-01-12
+## [2.1.0] - 2022-01-12
 - change CI matrix for more version compatibility
+- update gemspec to move some deps into development only
 - README changes
 
 ## [2.0.0] - 2022-01-07

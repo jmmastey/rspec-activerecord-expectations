@@ -323,5 +323,50 @@ RSpec.describe RSpec::ActiveRecord::Expectations do
         end
       }.to repeatedly_load(Album)
     end
+
+    it "works with find_in_batches" do
+      Track.create!(album: album)
+      Track.create!(album: album)
+
+      expect {
+        Track.all.find_in_batches do |batch|
+          batch.length # NOOP
+        end
+      }.not_to repeatedly_load(Track)
+
+      expect {
+        Track.all.find_in_batches(batch_size: 1) do |batch|
+          batch.length # NOOP
+        end
+      }.to repeatedly_load(Track)
+    end
+
+    it "works with in_batches" do
+      Track.create!(album: album)
+      Track.create!(album: album)
+
+      expect {
+        Track.all.in_batches do |batch|
+          batch.length # NOOP
+        end
+      }.not_to repeatedly_load(Track)
+
+      expect {
+        Track.all.in_batches(of: 1) do |batch|
+          batch.length # NOOP
+        end
+      }.to repeatedly_load(Track)
+    end
+
+    it "works with find_each" do
+      Track.create!(album: album)
+      Track.create!(album: album)
+
+      expect {
+        Track.all.find_each do |track|
+          track.id # NOOP
+        end
+      }.not_to repeatedly_load(Track)
+    end
   end
 end

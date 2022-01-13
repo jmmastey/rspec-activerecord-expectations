@@ -8,7 +8,7 @@ module RSpec::ActiveRecord::Expectations
     def categorize(query)
       if query[:name] == "SCHEMA"
         [:schema_queries]
-      elsif query[:name] == "TRANSACTION"
+      elsif query[:name] == "TRANSACTION" || query[:sql] =~ /^begin/i || query[:sql] =~ /^commit/i
         [:transaction_queries]
       elsif query[:name] =~ /Create$/
         [:queries, :insert_queries]
@@ -18,7 +18,7 @@ module RSpec::ActiveRecord::Expectations
         [:queries, :destroy_queries]
       elsif query[:name] =~ /Delete All$/
         [:queries, :destroy_queries]
-      elsif query[:name] =~ /Exists\?$/
+      elsif query[:name] =~ /Exists\??$/
         [:queries, :exists_queries]
       else
         [:queries]

@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          = "rspec-activerecord-expectations"
-  spec.version       = '2.0.1'
+  spec.version       = '2.1.0'
   spec.authors       = ["Joseph Mastey"]
   spec.email         = ["hello@joemastey.com"]
 
@@ -25,9 +25,9 @@ Gem::Specification.new do |spec|
   spec.add_dependency "activerecord", ">= 5.0.0", "< 7.1.0"
 
   if RUBY_PLATFORM == 'java'
-    spec.add_dependency "activerecord-jdbcsqlite3-adapter", '>= 60'
+    spec.add_development_dependency "activerecord-jdbcsqlite3-adapter", '>= 60'
   else
-    spec.add_dependency "sqlite3", "~> 1.0"
+    spec.add_development_dependency "sqlite3", "~> 1.0"
   end
 
   spec.add_development_dependency "pry", "~> 0.0"

@@ -110,11 +110,24 @@ This matcher will track ActiveRecord's built in load methods to prevent those
 N+1 situations. Using eager loading (e.g. `Track.all.includes(:album)`) will
 allow these expectations to pass as expected!
 
-**Note:** At the moment, this expectation will fail if you use a mechanism
-that loads records in batches, such as with `find_in_batches`. This will cause
-records to be "repeatedly loaded", but this is actually expected behavior in
-this case. If your tests load a relatively small number of records (which is
-probable), your tests won't fail. But it is possible.
+### Testing Batch Queries
+
+If your code loads records in batches, it may be more difficult to create
+expectations for repeated loading. After all, each batch will execute its own
+queries, which may look like repeated loading.
+
+If your test has a small enough number of records that only one batch is
+loaded, your tests may work just fine. But otherwise, you may want to allow
+your code to specify a batch size in order to guarantee only a single batch
+is loaded:
+
+```ruby
+tracks = Track.all
+
+expect {
+  TrackSerializer.perform(tracks, batch_size: tracks.count)
+}.not_to repeatedly_load('Track')
+```
 
 ## Counting Queries
 
