@@ -369,4 +369,74 @@ RSpec.describe RSpec::ActiveRecord::Expectations do
       }.not_to repeatedly_load(Track)
     end
   end
+
+  describe "#execute_a_transaction" do
+    it "allows you to assert aganinst transactions" do
+      expect {
+        Track.create!
+      }.to execute_a_transaction
+
+      expect {
+        ActiveRecord::Base.transaction do
+          Track.count
+        end
+      }.to execute_a_transaction
+    end
+  end
+
+  describe "#rollback_a_transaction" do
+    it "tracks rollback" do
+      expect do
+        label = Label.new(name: nil)
+        label.save(validate: false)
+      rescue
+        # NOOP
+      end.to rollback_a_transaction
+
+      expect do
+        label = Label.new(name: nil)
+        label.save(validate: false)
+      rescue
+        # NOOP
+      end.to roll_back_a_transaction
+    end
+
+    it "doesn't track rollbacks for DB-level or validations errors" do
+      expect {
+        Label.create
+      }.not_to rollback_a_transaction
+
+      expect {
+        expect {
+          Label.create!(id: -1)
+        }.not_to rollback_a_transaction
+      }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
+    it "doesn't track for successes" do
+      expect {
+        Label.create(name: 'foo')
+      }.not_to rollback_a_transaction
+
+      expect {
+        Label.create(name: 'bar')
+      }.not_to roll_back_a_transaction
+    end
+  end
+
+  describe "#commit_a_transaction" do
+    it "allows for properly committed transactions" do
+      expect {
+        Track.create!
+      }.to commit_a_transaction
+    end
+
+    it "fails for failed transactions" do
+      expect do
+        Label.create!(name: nil)
+      rescue
+        # NOOP
+      end.not_to commit_a_transaction
+    end
+  end
 end

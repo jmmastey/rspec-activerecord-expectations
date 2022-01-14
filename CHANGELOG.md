@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.2.0] - 2022-01-14
+- Adds transaction matcher to verify that code was executed within a
+  transaction at minimum
+- Transaction matcher also allows for commits and rollbacks
+- Update README for accompanying functionality
+
 ## [2.1.1] - 2022-01-12
 - Gemspec is really generated using the version of ruby that's locally in use.
   Update that build artifact to use non-java dependencies.

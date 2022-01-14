@@ -181,7 +181,57 @@ expect {}.to execute.exactly(20).transaction_queries
 categories, nor are queries that load the DB schema.
 
 **Note:** Destroy and delete queries are both condensed into the matcher for
-`destroy_queries`.
+the errorthe error  `destroy_queries`.
+
+## Transaction Management
+
+Sometimes, it makes sense to monitor whether database transactions were
+successful or not. This is very similar to using `expect{}.to change(SomeModel,
+:count)` in a spec, but nonetheless it can be useful to assert transactions
+themselves. Some assertions are available for this purpose.
+
+```ruby
+expect {}.to execute_a_transaction
+expect {}.to rollback_a_transaction
+expect {}.to roll_back_a_transaction
+expect {}.to commit_a_transaction
+```
+
+A complication to this scheme is that Rails tries not to make unnecessary database
+calls, which means that attempting to save a model that has failing validations
+won't actually attempt to save to the database.
+
+```ruby
+expect {
+  MyClass.create!(required_field: nil)
+}.to rollback_a_transaction
+```
+
+This assertion will fail, as `create!` will never make it as far as the
+database.  That said, if you manually create a transaction, _and you select
+data within that transaction_, you may assert a rollback.
+
+```ruby
+expect {
+  MyClass.first # triggers the transaction
+  MyClass.create!(required_field: nil)
+}.to rollback_a_transaction
+```
+
+It you need to make transaction-related assertions of this sort, your best bet
+may be to assert that a commit statement was _not_ issued.
+
+```ruby
+expect do
+  MyClass.create!(required_field: nil)
+rescue
+  # NOOP
+end.not_to rollback_a_transaction
+```
+
+Note that ActiveRecord will not only roll back the transaction, but also
+re-raise errors. As such, it's necessary in this example to rescue that
+error in order for the test to fail.
 
 ## Future Planned Functionality
 
@@ -194,14 +244,13 @@ expect {}.to execute.at_least(2).load_queries("Audited::Audit")
 expect {}.to execute.at_least(2).activerecord_queries
 expect {}.to execute.at_least(2).hand_rolled_queries
 
-expect {}.not_to rollback_transaction.exactly(5).times
-expect {}.not_to commit_transaction.once
-expect {}.to run_a_transaction
-
 expect {}.to create.exactly(5).of_type(User)
 expect {}.to insert.exactly(5).subscription_changes
 expect {}.to update.exactly(2).of_any_type
 expect {}.to delete.exactly(2).of_any_type
+
+expect {}.to commit_a_transaction.once
+expect {}.to rollback_a_transaction.exactly(5).times
 ```
 
 - warn if we smite any built in methods (or methods from other libs)
