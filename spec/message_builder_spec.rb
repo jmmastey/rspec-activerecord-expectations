@@ -11,15 +11,6 @@ RSpec.describe RSpec::ActiveRecord::Expectations::MessageBuilder do
     described_class.new(matcher).failure_message_when_negated
   end
 
-  it "uses a matcher object to generate messages" do
-    matcher = Matchers::QueryCountMatcher.new.exactly(1).query
-
-    instance = described_class.new(matcher)
-
-    expect(instance.failure_message).to be_a(String)
-    expect(instance.failure_message_when_negated).to be_a(String)
-  end
-
   describe "query counts" do
     let(:matcher) { Matchers::QueryCountMatcher.new }
 
@@ -68,6 +59,13 @@ RSpec.describe RSpec::ActiveRecord::Expectations::MessageBuilder do
         expect(negated_message_for(matcher, actual: 1)).to eq(
           "expected block not to execute a query, but it did so"
         )
+
+        # singular suffix
+        matcher.exactly(2).queries
+
+        expect(message_for(matcher, actual: 1)).to eq(
+          "expected block to execute 2 queries, but it executed one"
+        )
       end
     end
 
@@ -76,7 +74,7 @@ RSpec.describe RSpec::ActiveRecord::Expectations::MessageBuilder do
         matcher.greater_than(2).queries
 
         expect(message_for(matcher, actual: 1)).to eq(
-          "expected block to execute more than 2 queries, but it executed 1"
+          "expected block to execute more than 2 queries, but it executed one"
         )
 
         expect(negated_message_for(matcher, actual: 3)).to eq(
@@ -88,11 +86,18 @@ RSpec.describe RSpec::ActiveRecord::Expectations::MessageBuilder do
         matcher.greater_than_or_equal_to(2).queries
 
         expect(message_for(matcher, actual: 1)).to eq(
-          "expected block to execute at least 2 queries, but it executed 1"
+          "expected block to execute at least 2 queries, but it executed one"
         )
 
         expect(negated_message_for(matcher, actual: 3)).to eq(
           "expected block not to execute at least 2 queries, but it executed 3"
+        )
+
+        # negative singular
+        matcher.greater_than_or_equal_to(2).queries
+
+        expect(negated_message_for(matcher, actual: 1)).to eq(
+          "expected block not to execute at least 2 queries, but it executed one"
         )
       end
 
@@ -122,6 +127,72 @@ RSpec.describe RSpec::ActiveRecord::Expectations::MessageBuilder do
     end
   end
 
-  xdescribe "transactions" do
+  describe "transactions" do
+    let(:matcher) { Matchers::TransactionMatcher.new(:transaction_queries) }
+
+    it "has some equality output" do
+      matcher.once
+
+      expect(message_for(matcher, actual: 3)).to eq(
+        "expected block to execute a transaction, but it executed 3"
+      )
+
+      expect(negated_message_for(matcher, actual: 1)).to eq(
+        "expected block not to execute a transaction, but it did so"
+      )
+    end
+
+    it "has some comparison output" do
+      matcher.once
+      expect(message_for(matcher, actual: 99)).to match(/execute a transaction/)
+
+      matcher.twice
+      expect(message_for(matcher, actual: 99)).to match(/execute 2 transactions/)
+
+      matcher.at_least(3).times
+      expect(message_for(matcher, actual: 99)).to match(/execute at least 3 transactions/)
+    end
+  end
+
+  context "#commit_transaction" do
+    let(:matcher) { Matchers::TransactionMatcher.new(:commit_queries) }
+
+    it "can specialize prefix output" do
+      matcher.once
+      expect(message_for(matcher, actual: 99)).to match(/commit a transaction/)
+
+      matcher.twice
+      expect(message_for(matcher, actual: 99)).to match(/commit 2 transactions/)
+
+      matcher.at_least(3).times
+      expect(message_for(matcher, actual: 99)).to match(/commit at least 3 transactions/)
+    end
+
+    it "can specialize suffix output" do
+      matcher.once
+      expect(message_for(matcher, actual: 5)).to eq(
+        "expected block to commit a transaction, but it committed 5"
+      )
+
+      matcher.twice
+      expect(negated_message_for(matcher, actual: 2)).to eq(
+        "expected block not to commit 2 transactions, but it did so"
+      )
+    end
+  end
+
+  context "#rollback_transaction" do
+    let(:matcher) { Matchers::TransactionMatcher.new(:rollback_queries) }
+
+    it "can specialize prefix output" do
+      matcher.once
+      expect(message_for(matcher, actual: 99)).to match(/roll back a transaction/)
+
+      matcher.twice
+      expect(message_for(matcher, actual: 99)).to match(/roll back 2 transactions/)
+
+      matcher.at_least(3).times
+      expect(message_for(matcher, actual: 99)).to match(/roll back at least 3 transactions/)
+    end
   end
 end

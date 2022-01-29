@@ -1,7 +1,8 @@
 # Changelog
 
-## [2.3.0] - 2022-01-22
+## [2.3.0] - 2022-01-29
 - Add quantifiers to transaction matchers
+- Add much more complicated English output for readable matchers
 - Update README for the same
 
 ## [2.2.0] - 2022-01-14
