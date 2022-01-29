@@ -2,6 +2,7 @@ module RSpec::ActiveRecord::Expectations
   module Matchers
     class TransactionMatcher
       attr_reader :collector, :failure_message, :failure_message_when_negated
+      attr_reader :quantifier
 
       def initialize(transaction_type)
         @collector    = Collector.new
@@ -164,13 +165,13 @@ module RSpec::ActiveRecord::Expectations
 
       def negated_message_plural
         pre_msg, post_msg = case @transaction
-                   when :transaction_queries
-                     ["execute a transaction", "executed #{@count} transactions"]
-                   when :rollback_queries
-                     ["roll back a transaction", "rolled back #{@count} transactions"]
-                   when :commit_queries
-                     ["commit a transaction", "committed #{@count} transactions"]
-                   end
+                            when :transaction_queries
+                              ["execute a transaction", "executed #{@count} transactions"]
+                            when :rollback_queries
+                              ["roll back a transaction", "rolled back #{@count} transactions"]
+                            when :commit_queries
+                              ["commit a transaction", "committed #{@count} transactions"]
+                            end
 
         "expected block not to #{pre_msg}, but it #{post_msg}"
       end
@@ -202,3 +203,4 @@ module RSpec::ActiveRecord::Expectations
       end
     end
   end
+end

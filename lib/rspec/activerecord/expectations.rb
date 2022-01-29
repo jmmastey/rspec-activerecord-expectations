@@ -31,6 +31,7 @@ end
 require_relative 'expectations/errors'
 require_relative 'expectations/query_inspector'
 require_relative 'expectations/collector'
+require_relative 'expectations/message_builder'
 require_relative 'expectations/matchers/query_count_matcher'
 require_relative 'expectations/matchers/load_matcher'
 require_relative 'expectations/matchers/transaction_matcher'

@@ -9,8 +9,8 @@ RSpec.describe RSpec::ActiveRecord::Expectations::Matchers::QueryCountMatcher do
 
       matcher.matches?(example)
 
-      expect(matcher.failure_message).to eq("expected block to execute fewer than 3 queries, but it executed 0")
-      expect(matcher.failure_message_when_negated).to eq("expected block not to execute fewer than 3 queries, but it executed 0")
+      expect(matcher.failure_message).to eq("expected block to execute less than 3 queries, but it didn't execute any")
+      expect(matcher.failure_message_when_negated).to eq("expected block not to execute less than 3 queries, but it executed 0")
     end
   end
 
@@ -20,8 +20,8 @@ RSpec.describe RSpec::ActiveRecord::Expectations::Matchers::QueryCountMatcher do
 
       matcher.matches?(example)
 
-      expect(matcher.failure_message).to eq("expected block to execute at most 3 queries, but it executed 0")
-      expect(matcher.failure_message_when_negated).to eq("expected block not to execute any less than 3 queries, but it executed 0")
+      expect(matcher.failure_message).to eq("expected block to execute at most 3 queries, but it didn't execute any")
+      expect(matcher.failure_message_when_negated).to eq("expected block not to execute at most 3 queries, but it executed 0")
     end
 
     it "has query-type specific output too" do
@@ -29,8 +29,8 @@ RSpec.describe RSpec::ActiveRecord::Expectations::Matchers::QueryCountMatcher do
 
       matcher.matches?(example)
 
-      expect(matcher.failure_message).to eq("expected block to execute at most 3 insert queries, but it executed 0")
-      expect(matcher.failure_message_when_negated).to eq("expected block not to execute any less than 3 insert queries, but it executed 0")
+      expect(matcher.failure_message).to eq("expected block to execute at most 3 insert queries, but it didn't execute any")
+      expect(matcher.failure_message_when_negated).to eq("expected block not to execute at most 3 insert queries, but it executed 0")
     end
   end
 

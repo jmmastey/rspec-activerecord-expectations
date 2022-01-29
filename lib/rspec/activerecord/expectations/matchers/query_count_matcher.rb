@@ -1,14 +1,23 @@
 module RSpec::ActiveRecord::Expectations
   module Matchers
     class QueryCountMatcher
-      attr_reader :collector, :failure_message, :failure_message_when_negated
+      attr_reader :collector, :quantifier, :comparison, :query_type
 
       def initialize
         @collector = Collector.new
+        @message_builder = MessageBuilder.new(self)
 
         @match_method = nil
         @quantifier   = nil
         @query_type   = nil
+      end
+
+      def failure_message
+        @message_builder.failure_message
+      end
+
+      def failure_message_when_negated
+        @message_builder.failure_message_when_negated
       end
 
       def supports_block_expectations?
@@ -30,35 +39,40 @@ module RSpec::ActiveRecord::Expectations
 
       def less_than(n)
         @quantifier   = n
-        @match_method = method(:compare_less_than)
+        @comparison   = :less_than
+        @match_method = -> { actual_count < @quantifier }
         self
       end
       alias_method :fewer_than, :less_than
 
       def less_than_or_equal_to(n)
         @quantifier   = n
-        @match_method = method(:compare_less_than_or_equal_to)
+        @comparison   = :less_than_or_equal_to
+        @match_method = -> { actual_count <= @quantifier }
         self
       end
       alias_method :at_most, :less_than_or_equal_to
 
       def greater_than(n)
         @quantifier   = n
-        @match_method = method(:compare_greater_than)
+        @comparison   = :greater_than
+        @match_method = -> { actual_count > @quantifier }
         self
       end
       alias_method :more_than, :greater_than
 
       def greater_than_or_equal_to(n)
         @quantifier   = n
-        @match_method = method(:compare_greater_than_or_equal_to)
+        @comparison   = :greater_than_or_equal_to
+        @match_method = -> { actual_count >= @quantifier }
         self
       end
       alias_method :at_least, :greater_than_or_equal_to
 
       def exactly(n)
         @quantifier   = n
-        @match_method = method(:compare_exactly)
+        @comparison   = :exactly
+        @match_method = -> { actual_count == @quantifier }
         self
       end
 
@@ -79,62 +93,10 @@ module RSpec::ActiveRecord::Expectations
         end
       end
 
-      # TODO singularize everything
-      alias_method :query, :queries
+      # helper for message builder
 
-      private
-
-      def humanized_query_type
-        @query_type.to_s.gsub("_", " ")
-      end
-
-      # MATCHERS / ACTUAL COMPARISON
-
-      def compare_less_than
-        count = @collector.queries_of_type(@query_type)
-
-        @failure_message = "expected block to execute fewer than #{@quantifier} #{humanized_query_type}, but it executed #{count}"
-        @failure_message_when_negated = "expected block not to execute fewer than #{@quantifier} #{humanized_query_type}, but it executed #{count}"
-
-        count < @quantifier
-      end
-
-      def compare_less_than_or_equal_to
-        count = @collector.queries_of_type(@query_type)
-
-        # boy this negated operator is confusing. don't use that plz.
-        @failure_message = "expected block to execute at most #{@quantifier} #{humanized_query_type}, but it executed #{count}"
-        @failure_message_when_negated = "expected block not to execute any less than #{@quantifier} #{humanized_query_type}, but it executed #{count}"
-
-        count <= @quantifier
-      end
-
-      def compare_greater_than
-        count = @collector.queries_of_type(@query_type)
-
-        @failure_message = "expected block to execute greater than #{@quantifier} #{humanized_query_type}, but it executed #{count}"
-        @failure_message_when_negated = "expected block not to execute greater than #{@quantifier} #{humanized_query_type}, but it executed #{count}"
-
-        count > @quantifier
-      end
-
-      def compare_greater_than_or_equal_to
-        count = @collector.queries_of_type(@query_type)
-
-        # see above, negating this matcher is so confusing.
-        @failure_message = "expected block to execute at least #{@quantifier} #{humanized_query_type}, but it executed #{count}"
-        @failure_message_when_negated = "expected block not to execute any more than #{@quantifier} #{humanized_query_type}, but it executed #{count}"
-
-        count >= @quantifier
-      end
-
-      def compare_exactly
-        count = @collector.queries_of_type(@query_type)
-
-        @failure_message = "expected block to execute exactly #{@quantifier} #{humanized_query_type}, but it executed #{count}"
-        @failure_message_when_negated = "expected block not to execute exactly #{@quantifier} #{humanized_query_type}, but it executed #{count}"
-
-        count == @quantifier
+      def actual_count
+        @collector.queries_of_type(@query_type)
       end
     end
   end
