@@ -230,8 +230,20 @@ end.not_to rollback_a_transaction
 ```
 
 Note that ActiveRecord will not only roll back the transaction, but also
-re-raise errors. As such, it's necessary in this example to rescue that
-error in order for the test to fail.
+re-raise errors. As such, it's necessary in this example to rescue that error,
+otherwise the test would fail simply because the code caused a `raise`.
+
+### Counting Transactions
+
+Similar to counting queries, you can quantify the number of transactions you
+expect to succeed / fail. This is probably of limited value in all but some
+very specific cases.
+
+```ruby
+expect {}.to commit_a_transaction.once
+expect {}.to rollback_a_transaction.exactly(5).times
+expect {}.to commit_a_transaction.at_least(5).times
+```
 
 ## Future Planned Functionality
 
@@ -248,9 +260,6 @@ expect {}.to create.exactly(5).of_type(User)
 expect {}.to insert.exactly(5).subscription_changes
 expect {}.to update.exactly(2).of_any_type
 expect {}.to delete.exactly(2).of_any_type
-
-expect {}.to commit_a_transaction.once
-expect {}.to rollback_a_transaction.exactly(5).times
 ```
 
 - warn if we smite any built in methods (or methods from other libs)

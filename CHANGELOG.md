@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.3.0] - 2022-01-22
+- Add quantifiers to transaction matchers
+- Update README for the same
+
 ## [2.2.0] - 2022-01-14
 - Adds transaction matcher to verify that code was executed within a
   transaction at minimum

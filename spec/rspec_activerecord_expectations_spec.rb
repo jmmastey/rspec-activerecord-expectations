@@ -433,10 +433,30 @@ RSpec.describe RSpec::ActiveRecord::Expectations do
 
     it "fails for failed transactions" do
       expect do
-        Label.create!(name: nil)
-      rescue
-        # NOOP
+        Label.create!(name: nil) rescue nil
       end.not_to commit_a_transaction
+    end
+
+    it "allows quantification" do
+      expect {
+        2.times { Label.create!(name: 'RCA') }
+      }.to commit_a_transaction.twice
+
+      expect {
+        2.times { Label.create!(name: 'RCA') }
+      }.not_to commit_a_transaction.exactly(3).times
+
+      expect {
+        2.times { Label.create!(name: 'RCA') }
+      }.to commit_a_transaction.at_least(1).time
+    end
+
+    it "quantifies but with other types of comparison" do
+      expect_failure
+
+      expect {
+        2.times { Label.create!(name: 'RCA') }
+      }.to commit_a_transaction.at_most(1).time
     end
   end
 end
