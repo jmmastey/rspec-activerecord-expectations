@@ -7,8 +7,8 @@ else
 end
 
 ActiveRecord::Base.establish_connection(
-  adapter: "sqlite3",
-  database: "tmp/test-db.sqlite",
+  adapter: "postgresql",
+  database: "rspec_activerecord_expectations_test",
   timeout: 5000,
 )
 

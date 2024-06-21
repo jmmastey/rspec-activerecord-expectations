@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          = "rspec-activerecord-expectations"
-  spec.version       = '2.3.0'
+  spec.version       = '3.0.0'
   spec.authors       = ["Joseph Mastey"]
   spec.email         = ["hello@joemastey.com"]
 
@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.description   = %q{Adds new matchers to rspec to help you test whether your code is executing an unreasonable number of queries.}
   spec.homepage      = "https://github.com/jmmastey/rspec-activerecord-expectations"
   spec.license       = "MIT"
-  spec.required_ruby_version = Gem::Requirement.new(">= 2.5.0")
+  spec.required_ruby_version = Gem::Requirement.new(">= 3.0.0")
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = spec.homepage
@@ -22,14 +22,10 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "activerecord", ">= 5.0.0", "< 7.1.0"
+  spec.add_dependency "activerecord", ">= 5.0.0", "< 8.0"
 
-  if RUBY_PLATFORM == 'java'
-    spec.add_development_dependency "activerecord-jdbcsqlite3-adapter", '>= 60'
-  else
-    spec.add_development_dependency "sqlite3", "~> 1.0"
-  end
+  spec.add_development_dependency "pg"
 
-  spec.add_development_dependency "pry", "~> 0.0"
+  spec.add_development_dependency "pry"
   spec.add_development_dependency "appraisal", "~> 2"
 end
