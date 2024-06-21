@@ -26,7 +26,7 @@ group.
 
 ```ruby
 group 'test' do
-  gem 'rspec-activerecord-expectations', '~> 1.0'
+  gem 'rspec-activerecord-expectations', '~> 3.0'
 end
 ```
 

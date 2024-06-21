@@ -1,4 +1,7 @@
 # Changelog
+ 
+## [3.0.0] - 2024-06-21
+- Add support for RAils 7.0-7.2
 
 ## [2.3.0] - 2022-01-29
 - Add quantifiers to transaction matchers
